@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+  <title>植物大战僵尸v1.18</title>
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="js-startGame-btn" class="startGame-btn">点击开始游戏</div>
+<div id="js-intro-game" class="intro-game">
+  欢迎来到 David Yang 的 JavaScript 版植物大战僵尸<br>
+  个人博客：<a href="http://www.yangyunhe.me" target="_blank">http://www.yangyunhe.me</a><br>
+  程序开发的目的是为了学习，所有版权归 David Yang 所有
+</div>
+<div id="js-log-btn" class="check-log-btn change-log-btn">点击查看更新日志</div>
+<!-- 游戏主场景 -->
+<div class="content-box">
+  <canvas id="canvas" width="1400" height="600"></canvas>
+</div>
+<!-- 更新日志 -->
+<div class="update-log" style="display: none;">
+  <div class="title">更新日志</div>
+  <dl>
+    <dt>2017.11.27</dt>
+    <dd>添加植物-向日葵，可自动生成阳光</dd>
+    <dt>2017.11.28</dt>
+    <dd>添加植物-坚果墙，修复添加新植物使同行处于攻击状态的僵尸攻击判定失效bug</dd>
+    <dd>添加植物-樱桃炸弹</dd>
+    <dt>2017.11.29</dt>
+    <dd>添加小铲车，可一次性清除整行僵尸，调整植物冷却时间</dd>
+  </dl>
+  <input class="close-log-btn change-log-btn" type="button" value="关闭"></input>
+</div>
+<!-- 卡片列表 -->
+<ul class="cards-list">
+  <li class="cards-item" data-section="sunflower">
+    <div class="card-intro">
+      <span>向日葵</span>
+      <span>冷却时间：5秒</span>
+      <span>向日葵是你收集额外阳光必不可少的植物。为什么不多种一些呢？</span>
+    </div>
+  </li>
+  <li class="cards-item" data-section="peashooter">
+    <div class="card-intro">
+      <span>豌豆射手</span>
+      <span>冷却时间：7秒</span>
+      <span>向敌人射出豌豆</span>
+    </div>
+  </li>
+  <li class="cards-item" data-section="repeater">
+    <div class="card-intro">
+      <span>双发豌豆射手</span>
+      <span>冷却时间：10秒</span>
+      <span>向敌人连续射出两发豌豆</span>
+    </div>
+  </li>
+  <li class="cards-item" data-section="gatlingpea">
+    <div class="card-intro">
+      <span>加特林射手</span>
+      <span>冷却时间：15秒</span>
+      <span>向敌人快速射出豌豆</span>
+    </div>
+  </li>
+  <li class="cards-item" data-section="cherrybomb">
+    <div class="card-intro">
+      <span>樱桃炸弹</span>
+      <span>冷却时间：25秒</span>
+      <span>樱桃炸弹能够炸飞一片区域（以自身为中心，附近9格）内的所有僵尸。</span>
+    </div>
+  </li>
+  <li class="cards-item" data-section="wallnut">
+    <div class="card-intro">
+      <span>坚果墙</span>
+      <span>冷却时间：12秒</span>
+      <span>墙果具备坚硬的外壳，你可以使用他们来保护其他植物</span>
+    </div>
+  </li>
+</ul>
+<!-- 游戏控制按键 -->
+<div class="menu-box">
+  <div id="pauseGame" class="contro-btn">暂停</div>
+  <div id="restartGame" class="contro-btn">开始游戏</div>
+</div>
+<!-- 系统自动生成阳光 -->
+<img class="sun-img systemSun" src="images/sun.gif" alt="">
+<script src="js/common.js"></script>
+<script src="js/scene.js"></script>
+<script src="js/game.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

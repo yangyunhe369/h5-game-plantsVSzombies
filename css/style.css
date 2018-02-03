@@ -1,0 +1,187 @@
+/* by：弦云孤赫——David Yang
+** github - https://github.com/yangyunhe369
+*/
+body {
+  background: #f5f5d8;
+}
+.content-box {
+  display: block;
+  width: 900px;
+  height: 600px;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid black;
+  border-top: none;
+}
+#canvas {
+  display: block;
+  margin-left: -120px;
+  border: 1px solid black;
+  background: #000;
+}
+.intro-game {
+  position: absolute;
+  left: 460px;
+  top: 10px;
+  width: 430px;
+  font-size: 18px;
+  line-height: 25px;
+  color: #F60;
+}
+.intro-game a{
+  color: #ffbe93;
+}
+.startGame-btn {
+  position: absolute;
+  left: 240px;
+  top: 520px;
+  width: 321px;
+  font-size: 18px;
+  color: #FF0;
+  height: 69px;
+  line-height: 80px;
+  text-align: center;
+  cursor: pointer;
+  background: url(../images/LogoLine.png) no-repeat center/contain;
+  z-index: 9;
+}
+.cards-list {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100px;
+  z-index: 99;
+}
+.cards-list .cards-item {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 60px;
+  cursor: pointer;
+}
+.cards-list .cards-item:hover .card-intro {
+  display: block;
+}
+.cards-list .cards-item .card-intro {
+  display: none;
+  position: absolute;
+  left: 100px;
+  top: 0;
+  width: 150px;
+  height: auto;
+  padding-bottom: 5px;
+  border: 1px solid #000;
+  background: #FFFFDD;
+  color: #000;
+}
+.cards-list .cards-item .card-intro span {
+  display: inline-block;
+  width: 100%;
+  height: 20px;
+  font-size: 12px;
+  line-height: 20px;
+  text-align: center;
+}
+.menu-box {
+  display: none;
+  position: absolute;
+  left: 674px;
+  top: 0;
+  width: 226px;
+  height: 41px;
+  line-height: 41px;
+}
+.menu-box .contro-btn {
+  display: none;
+  float: left;
+  width: 113px;
+  height: 100%;
+  line-height: inherit;
+  color: #00CB08;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: '黑体';
+  background: url(../images/button.png) center/cover;
+  cursor: pointer;
+}
+.menu-box .contro-btn.show {
+  display: block;
+}
+.sun-img {
+  position: absolute;
+  left: 300px;
+  top: -100px;
+  opacity: 1;
+  cursor: pointer;
+  z-index: 100;
+}
+.show {
+  display: block;
+}
+.none {
+  display: none;
+}
+.check-log-btn {
+  position: absolute;
+  left: 600px;
+  top: 532px;
+  font-size: 14px;
+  color: #FF0;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  text-decoration: underline;
+  cursor: pointer;
+  z-index: 9;
+}
+.update-log {
+  /*display: none;*/
+  position: absolute;
+  left: 130px;
+  top: 50px;
+  width: 640px;
+  height: 500px;
+  text-align: center;
+  border: 1px solid #FFF;
+  background-color: #000;
+  color: #FFE;
+  z-index: 250;
+  padding: 10px;
+}
+.update-log .title {
+  font-size: 16px;
+  color: #FF0;
+  margin: 10px 0; 
+}
+.update-log dl {
+  text-align: left;
+  height: 400px;
+  overflow: auto;
+}
+.update-log dl dd,.update-log dl dt {
+  font-size: 14px;
+  line-height: 18px;
+}
+.update-log dl dd {
+  padding-left: 30px;
+}
+.update-log .close-log-btn {
+  position: absolute;
+  bottom: 20px;
+  left: 260px;
+  cursor: pointer;
+  width: 120px;
+  height: 30px;
+  line-height: 24px;
+  border-left: 3px solid #85411C;
+  border-right: 3px solid #4E250C;
+  border-top: 3px solid #85411C;
+  border-bottom: 3px solid #4E250C;
+  background-color: #8F431B;
+  color: #FC6;
+  font-weight: bold;
+  font-size: 14px;
+}
+
