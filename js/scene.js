@@ -354,7 +354,7 @@ class Plant extends Role{
       canShoot: false,                                     // 植物是否具有发射子弹功能
       canSetTimer: obj.canSetTimer,                        // 能否设置生成阳光定时器
       sunTimer: null,                                      // 生成阳光定时器
-      sunTimer_spacing: 20,                                // 生成阳光时间间隔（秒）
+      sunTimer_spacing: 10,                                // 生成阳光时间间隔（秒）
     }
     Object.assign(this, p)
   }
@@ -395,7 +395,7 @@ class Plant extends Role{
         // 增加阳光数量
         window._main.sunnum.changeSunNum()
       }, 2700)
-    }, self.sunTimer_spacing)
+    }, self.sunTimer_spacing * 1000)
   }
   // 清除阳光生成定时器
   clearSunTimer () {
