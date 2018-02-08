@@ -27,12 +27,13 @@ class Main {
         x: 0,                                   // x 轴坐标
         y: 0,                                   // y 轴坐标
         position: [
-          {name: 'sunflower', row: 1, sun_val: 50, timer_spacing: 5000},
-          {name: 'peashooter', row: 2, sun_val: 100, timer_spacing: 7000},
-          {name: 'repeater', row: 3, sun_val: 150, timer_spacing: 10000},
-          {name: 'gatlingpea', row: 4, sun_val: 200, timer_spacing: 15000},
-          {name: 'cherrybomb', row: 5, sun_val: 250, timer_spacing: 25000},
-          {name: 'wallnut', row: 6, sun_val: 50, timer_spacing: 12000},
+          {name: 'sunflower', row: 1, sun_val: 50, timer_spacing: 5 * 1000},
+          {name: 'wallnut', row: 2, sun_val: 50, timer_spacing: 12 * 1000},
+          {name: 'peashooter', row: 3, sun_val: 100, timer_spacing: 7 * 1000},
+          {name: 'repeater', row: 4, sun_val: 150, timer_spacing: 10 * 1000},
+          {name: 'gatlingpea', row: 5, sun_val: 200, timer_spacing: 15 * 1000},
+          {name: 'chomper', row: 6, sun_val: 200, timer_spacing: 15 * 1000},
+          {name: 'cherrybomb', row: 7, sun_val: 250, timer_spacing: 25 * 1000},
         ]
       },
       plants: [],                               // 实例化植物对象数组
@@ -41,7 +42,7 @@ class Main {
         type: 'plant',                          // 角色类型
         x: 250,                                 // 初始 x 轴坐标，递增量 80
         y: 92,                                  // 初始 y 轴坐标，递增量 100
-        position: [                             // section：植物类别，row：横行坐标（最小值为 5），col：竖列坐标（最大值为 9）
+        position: [                             // section：植物类别，row：横行坐标（最大值为 5），col：竖列坐标（最大值为 9）
           // 设置初始数据：{section: 'sunflower', row: 1, col: 1},
         ]
       },
@@ -49,7 +50,7 @@ class Main {
         type: 'zombie',                         // 角色类型
         x: 170,                                 // x轴坐标
         y: 15,                                  // y轴坐标
-        position: [                             // section：僵尸类别，row：横行坐标（最小值为 9），col：竖列坐标（最大值为 13）
+        position: [                             // section：僵尸类别，row：横行坐标（最大值为 5），col：竖列坐标（最大值为 13）
           // 设置初始数据：{section: 'zombie', row: 1, col: 1},
         ]
       },

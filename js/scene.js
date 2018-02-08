@@ -106,7 +106,7 @@ class Card{
     let self = this
     if (!self.canClick) {
       // 设置定时器，恢复可点击状态
-      self.timer = setTimeout(function () {
+      self.timer = setTimeout(()=> {
         self.canClick = true
       }, self.timer_spacing)
     }
@@ -157,7 +157,7 @@ class Car{
         if (zombie.x < 150) { // 当僵尸靠近房子时，启动除草车
           self.state = self.state_ATTACK
         }
-        if (self.state === self.state_ATTACK) { // 当除草车启动时，清楚整行僵尸
+        if (self.state === self.state_ATTACK) { // 当除草车启动时，清除整行僵尸
           if (zombie.x - self.x < self.w && zombie.x < 950) {
             zombie.life = 0
             zombie.changeAnimation('die')
@@ -241,7 +241,7 @@ class Animation{
   // 创建，并初始化当前对象
   static new (role, action, fps) {
     let a = new this(role, action, fps)
-    // 濒死动画、死亡动画对象
+    // 濒死动画、死亡动画对象（僵尸）
     if (action === 'dying' || action === 'die') {
       a.images = {
         head: [],
@@ -342,15 +342,19 @@ class Plant extends Role{
       idleM: null,                                         // 坚果中等血量动画对象
       idleL: null,                                         // 坚果低血量动画对象
       attack: null,                                        // 角色攻击动画对象
+      digest: null,                                        // 角色消化动画对象
       bullets: [],                                         // 子弹数组对象
       state: obj.section === 'wallnut' ? 2 : 1,            // 保存当前状态值
       state_IDLE: 1,                                       // 站立不动状态
-      state_IDLE_H: 2,                                     // 站立不动高血量状态
-      state_IDLE_M: 3,                                     // 站立不动中等血量状态
-      state_IDLE_L: 4,                                     // 站立不动低血量状态
+      state_IDLE_H: 2,                                     // 站立不动高血量状态（坚果墙相关动画）
+      state_IDLE_M: 3,                                     // 站立不动中等血量状态（坚果墙相关动画）
+      state_IDLE_L: 4,                                     // 站立不动低血量状态（坚果墙相关动画）
       state_ATTACK: 5,                                     // 攻击状态
+      state_DIGEST: 6,                                     // 待攻击状态（食人花消化僵尸状态）
+      canShoot: false,                                     // 植物是否具有发射子弹功能
       canSetTimer: obj.canSetTimer,                        // 能否设置生成阳光定时器
       sunTimer: null,                                      // 生成阳光定时器
+      sunTimer_spacing: 20,                                // 生成阳光时间间隔（秒）
     }
     Object.assign(this, p)
   }
@@ -386,12 +390,12 @@ class Plant extends Role{
       let sun = document.getElementsByClassName('plantSun' + id)[0]
       sun.animate(keyframes1,keyframesOptions)
       // 动画完成，清除阳光元素
-      setTimeout(function () {
+      setTimeout(()=> {
         sun.parentNode.removeChild(sun)
         // 增加阳光数量
         window._main.sunnum.changeSunNum()
       }, 2700)
-    }, 6000)
+    }, self.sunTimer_spacing)
   }
   // 清除阳光生成定时器
   clearSunTimer () {
@@ -401,25 +405,28 @@ class Plant extends Role{
   // 初始化
   init () {
     let self = this,
-        allFn = null
+        setPlantFn = null
     // 初始化植物动画对象方法集
-    allFn = {
+    setPlantFn = {
       sunflower () {  // 向日葵
         self.idle = Animation.new(self, 'idle', 12)
         // 定时生成阳光
         self.canSetTimer && self.setSunTimer()
       },
       peashooter () { // 豌豆射手
+        self.canShoot = true
         self.idle = Animation.new(self, 'idle', 12)
         self.attack = Animation.new(self, 'attack', 12)
       },
       repeater () { // 双发射手
+        self.canShoot = true
         self.idle = Animation.new(self, 'idle', 12)
         self.attack = Animation.new(self, 'attack', 8)
       },
       gatlingpea () { // 加特林射手
         // 改变加特林渲染 y 轴距离
         self.y -= 12
+        self.canShoot = true
         self.idle = Animation.new(self, 'idle', 8)
         self.attack = Animation.new(self, 'attack', 4)
       },
@@ -427,11 +434,11 @@ class Plant extends Role{
         self.x -= 15
         self.idle = Animation.new(self, 'idle', 15)
         self.attack = Animation.new(self, 'attack', 15)
-        setTimeout(function () {
+        setTimeout(()=> {
           self.state = self.state_ATTACK
         }, 2000)
       },
-      wallnut () {  // 坚果墙
+      wallnut () { // 坚果墙
         self.x += 15
         // 设置坚果血量
         self.life = 12
@@ -439,31 +446,19 @@ class Plant extends Role{
         self.idleH = Animation.new(self, 'idleH', 10)
         self.idleM = Animation.new(self, 'idleM', 8)
         self.idleL = Animation.new(self, 'idleL', 10)
-      }
+      },
+      chomper () { // 食人花
+        self.life = 5
+        self.y -= 45
+        self.idle = Animation.new(self, 'idle', 10)
+        self.attack = Animation.new(self, 'attack', 12)
+        self.digest = Animation.new(self, 'digest', 12)
+      },
     }
     // 执行对应植物初始化方法
-    for (let key in allFn) {
+    for (let key in setPlantFn) {
       if (self.section === key) {
-        allFn[key]()
-      }
-    }
-  }
-  /**
-   * 判断角色状态并返回对应动画对象名称方法
-   */
-  switchState () {
-    let self = this,
-        state = self.state,
-        dictionary = {
-          idle: self.state_IDLE,
-          idleH: self.state_IDLE_H,
-          idleM: self.state_IDLE_M,
-          idleL: self.state_IDLE_L,
-          attack: self.state_ATTACK,
-        }
-    for (let key in dictionary) {
-      if (state === dictionary[key]) {
-        return key
+        setPlantFn[key]()
       }
     }
   }
@@ -512,14 +507,26 @@ class Plant extends Role{
       if (self[stateName].imgIdx === animateLen - 1) {
         if (stateName === 'attack' && !self.isDel) {
           // 未死亡，且为可发射子弹植物时
-          if (self.section === 'peashooter' || self.section === 'repeater' || self.section === 'gatlingpea') {
+          if (self.canShoot) {
             // 发射子弹
             self.shoot()
             // 双发射手额外发射子弹
-            self.section === 'repeater' && setTimeout(function () {self.shoot()}, 250)
+            self.section === 'repeater' && setTimeout(()=> {self.shoot()}, 250)
           }
           // 当为樱桃炸弹时，执行完一轮动画，自动消失
           self.section === 'cherrybomb' ? self.isDel = true : self.isDel = false
+          // 当为食人花时，执行完攻击动画，切换为消化动画
+          if (self.section === 'chomper') {
+            // 立即切换动画会出现图片未加载完成报错
+            setTimeout(()=> {
+              self.changeAnimation('digest')
+            }, 0)
+          }
+        } else if (self.section === 'chomper' && stateName === 'digest') {
+          // 消化动画完毕后，间隔一段时间切换为正常状态
+          setTimeout(()=> {
+            self.changeAnimation('idle')
+          }, 30000)
         }
         self.isAnimeLenMax = true
       } else {
@@ -534,8 +541,7 @@ class Plant extends Role{
     if (self.section === 'sunflower' || self.section === 'wallnut') return false
     // 循环僵尸对象数组
     for (let zombie of window._main.zombies) {
-      // 当为樱桃炸弹时
-      if (self.section === 'cherrybomb') {
+      if (self.section === 'cherrybomb') { // 当为樱桃炸弹时
         // 僵尸在以樱桃炸弹为圆心的 9 个格子内时
         if (Math.abs(self.row - zombie.row) <= 1 && Math.abs(self.col - zombie.col) <= 1 && zombie.col < 10) {
           // 执行爆炸动画
@@ -544,7 +550,15 @@ class Plant extends Role{
           // 僵尸炸死动画
           zombie.changeAnimation('dieboom')
         }
-      } else if (self.section !== 'cherrybomb' && self.row === zombie.row) { // 当植物不为樱桃炸弹，且僵尸和植物处于同行时
+      } else if (self.section === 'chomper' && self.state === self.state_IDLE) { // 当为食人花时
+        // 僵尸在食人花正前方时
+        if (self.row === zombie.row && (zombie.col - self.col) <= 1 && zombie.col < 10) {
+          self.changeAnimation('attack')
+          setTimeout(()=> {
+            zombie.isDel = true
+          }, 1300)
+        }
+      } else if (self.canShoot && self.row === zombie.row) { // 当植物可发射子弹，且僵尸和植物处于同行时
         // 僵尸进入植物射程范围
         zombie.x < 940 && self.x < zombie.x + 10 && zombie.life > 0 ? self.changeAnimation('attack') : self.changeAnimation('idle')
         // 植物未被移除时，可发射子弹
@@ -558,7 +572,7 @@ class Plant extends Role{
               if (zombie.life !== 0) {
                 zombie.life--
                 zombie.isHurt = true
-                setTimeout(function () {
+                setTimeout(()=> {
                   zombie.isHurt = false
                 }, 200)
               }
@@ -579,14 +593,35 @@ class Plant extends Role{
     self.bullets[self.bullets.length] = Bullet.new(self)
   }
   /**
+   * 判断角色状态并返回对应动画对象名称方法
+   */
+  switchState () {
+    let self = this,
+        state = self.state,
+        dictionary = {
+          idle: self.state_IDLE,
+          idleH: self.state_IDLE_H,
+          idleM: self.state_IDLE_M,
+          idleL: self.state_IDLE_L,
+          attack: self.state_ATTACK,
+          digest: self.state_DIGEST,
+        }
+    for (let key in dictionary) {
+      if (state === dictionary[key]) {
+        return key
+      }
+    }
+  }
+  /**
    * 切换角色动画
    * game => 游戏引擎对象
    * action => 动作类型
    *  -idle: 站立动画
-   *  -idleH: 角色高血量动画
-   *  -idleM: 角色中等血量动画
-   *  -idleL: 角色低血量动画
+   *  -idleH: 角色高血量动画（坚果墙）
+   *  -idleM: 角色中等血量动画（坚果墙）
+   *  -idleL: 角色低血量动画（坚果墙）
    *  -attack: 攻击动画
+   *  -digest: 消化动画（食人花）
    */
   changeAnimation (action) {
     let self = this,
@@ -597,6 +632,7 @@ class Plant extends Role{
           idleM: self.state_IDLE_M,
           idleL: self.state_IDLE_L,
           attack: self.state_ATTACK,
+          digest: self.state_DIGEST,
         }
     if (action === stateName) return
     self.state = dictionary[action]
@@ -624,6 +660,7 @@ class Zombie extends Role{
       state_DIEBOOM: 4,                                    // 死亡状态
       state_DYING: 5,                                      // 濒临死亡状态
       state_DIE: 6,                                        // 死亡状态
+      state_DIGEST: 7,                                     // 消化死亡状态
       speed: 3,                                            // 移动速度
       head_x: 0,                                           // 头部动画 x 轴坐标
       head_y: 0,                                           // 头部动画 y 轴坐标
@@ -651,26 +688,6 @@ class Zombie extends Role{
     self.dying = Animation.new(self, 'dying', 8)
     // 死亡
     self.die = Animation.new(self, 'die', 12)
-  }
-  /**
-   * 判断角色状态并返回对应动画对象名称方法
-   */
-  switchState () {
-    let self = this,
-        state = self.state,
-        dictionary = {
-          idle: self.state_IDLE,
-          run: self.state_RUN,
-          attack: self.state_ATTACK,
-          dieboom: self.state_DIEBOOM,
-          dying: self.state_DYING,
-          die: self.state_DIE,
-        }
-    for (let key in dictionary) {
-      if (state === dictionary[key]) {
-        return key
-      }
-    }
   }
   // 绘制方法
   draw (cxt) {
@@ -791,7 +808,11 @@ class Zombie extends Role{
       // 设置角色动画运行速度
       self[stateName].imgIdxBody = Math.floor(self[stateName].countBody / self[stateName].fps)
       // 设置当前帧动画对象，死亡状态，定格头部动画
-      self[stateName].imgHead = self[stateName].images.head[headAnimateLen - 1]
+      if (self[stateName].imgIdxHead === 0) {
+        self.head_x = self.x
+        self.head_y = self.y
+        self[stateName].imgHead = self[stateName].images.head[headAnimateLen - 1]
+      }
       // 设置当前帧动画对象，身体动画
       if (self[stateName].imgIdxBody === 0) {
         self[stateName].imgBody = self[stateName].images.body[self[stateName].imgIdxBody]
@@ -823,7 +844,7 @@ class Zombie extends Role{
             if (plant.life !== 0) {
               plant.life--
               plant.isHurt = true
-              setTimeout(function () {
+              setTimeout(()=> {
                 plant.isHurt = false
                 // 坚果墙判断切换动画状态
                 if (plant.life <= 8 && plant.section === 'wallnut') {
@@ -844,12 +865,36 @@ class Zombie extends Role{
     }
   }
   /**
+   * 判断角色状态并返回对应动画对象名称方法
+   */
+  switchState () {
+    let self = this,
+        state = self.state,
+        dictionary = {
+          idle: self.state_IDLE,
+          run: self.state_RUN,
+          attack: self.state_ATTACK,
+          dieboom: self.state_DIEBOOM,
+          dying: self.state_DYING,
+          die: self.state_DIE,
+          digest: self.state_DIGEST,
+        }
+    for (let key in dictionary) {
+      if (state === dictionary[key]) {
+        return key
+      }
+    }
+  }
+  /**
    * 切换角色动画
    * game => 游戏引擎对象
    * action => 动作类型
    *  -idle: 站立不动
    *  -attack: 攻击
    *  -die: 死亡
+   *  -dying: 濒死
+   *  -dieboom: 爆炸
+   *  -digest: 被消化
    */
   changeAnimation (action) {
     let self = this,
@@ -861,6 +906,7 @@ class Zombie extends Role{
           dieboom: self.state_DIEBOOM,
           dying: self.state_DYING,
           die: self.state_DIE,
+          digest: self.state_DIGEST,
         }
     if (action === stateName) return
     self.state = dictionary[action]

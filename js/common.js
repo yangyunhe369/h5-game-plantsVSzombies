@@ -60,6 +60,10 @@ const allImg = {
       img: 'cards/plants/WallNut.png',
       imgG: 'cards/plants/WallNutG.png',
     },
+    chomper: {  // 食人花
+      img: 'cards/plants/Chomper.png',
+      imgG: 'cards/plants/ChomperG.png',
+    },
   },
   plants: {                                                   // 植物 
     sunflower: {  // 向日葵
@@ -108,7 +112,7 @@ const allImg = {
         len: 5,
       },
     },
-    wallnut: {  // 坚果墙
+    wallnut: { // 坚果墙
       idleH: { // 血量高时动画
         path: 'plants/wallnut/idleH/idleH_*.png',
         len: 16,
@@ -121,6 +125,20 @@ const allImg = {
         path: 'plants/wallnut/idleL/idleL_*.png',
         len: 15,
       },
+    },
+    chomper: { // 食人花
+      idle: { // 站立动画
+        path: 'plants/chomper/idle/idle_*.png',
+        len: 13,
+      },
+      attack: { // 攻击动画
+        path: 'plants/chomper/attack/attack_*.png',
+        len: 8,
+      },
+      digest: { // 消化阶段动画
+        path: 'plants/chomper/digest/digest_*.png',
+        len: 6,
+      }
     },
   },
   zombies: {                                            // 僵尸
