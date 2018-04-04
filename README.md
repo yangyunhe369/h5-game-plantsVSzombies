@@ -4,6 +4,8 @@
 
 **demo**：[线上地址](https://yangyunhe369.github.io/h5-game-plantsVSzombies/)
 
+**代码详解**：[博客链接](http://www.yangyunhe.me/2018/h5-game-plantsVSzombies/)
+
 ## 项目截图
 
 ![](images/screenshot1.png)
