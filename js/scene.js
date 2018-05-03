@@ -809,8 +809,10 @@ class Zombie extends Role{
       self[stateName].imgIdxBody = Math.floor(self[stateName].countBody / self[stateName].fps)
       // 设置当前帧动画对象，死亡状态，定格头部动画
       if (self[stateName].imgIdxHead === 0) {
-        self.head_x = self.x
-        self.head_y = self.y
+        if (self.head_x == 0 && self.head_y == 0) {
+          self.head_x = self.x
+          self.head_y = self.y
+        }
         self[stateName].imgHead = self[stateName].images.head[headAnimateLen - 1]
       }
       // 设置当前帧动画对象，身体动画
